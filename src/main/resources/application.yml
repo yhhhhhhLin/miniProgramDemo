@@ -7,6 +7,8 @@ spring:
     url: jdbc:mysql://localhost:3306/miniProgramDemo
     username: root
     password: abc8909389
+  redis:
+    host: remote
 server:
   port: 7001
   servlet:
@@ -15,3 +17,6 @@ mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+weixin:
+  appid: ${WECHAT_APPID}
+  secret: ${WECHAT_SECRET}
