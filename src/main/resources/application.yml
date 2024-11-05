@@ -9,6 +9,7 @@ spring:
     password: abc8909389
   redis:
     host: remote
+    port: 26379
 server:
   port: 7001
   servlet:
