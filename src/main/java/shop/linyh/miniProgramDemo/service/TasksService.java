@@ -2,6 +2,9 @@ package shop.linyh.miniProgramDemo.service;
 
 import shop.linyh.miniProgramDemo.entity.Tasks;
 import com.baomidou.mybatisplus.extension.service.IService;
+import shop.linyh.miniProgramDemo.entity.vo.DayAndCountVO;
+
+import java.util.List;
 
 /**
 * @author linzz
@@ -10,4 +13,11 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface TasksService extends IService<Tasks> {
 
+    /**
+     * 根据年月查询当前月的所有日和对应任务数量
+     * @param year
+     * @param month
+     * @return
+     */
+    List<DayAndCountVO> calendars(Integer year, Integer month);
 }

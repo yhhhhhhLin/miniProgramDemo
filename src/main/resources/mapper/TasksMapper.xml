@@ -17,8 +17,17 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,task_content,task_time,
+        id
+        ,task_content,task_time,
         user_id,is_finish,need_notify,
         created_time,updated_time,is_delete
     </sql>
+    <select id="calendars" resultType="shop.linyh.miniProgramDemo.entity.vo.DayAndCountVO">
+        SELECT DATE_FORMAT(task_time, '%Y-%m-%d') AS task_date, COUNT(*) AS task_count
+        FROM tasks
+        WHERE STR_TO_DATE(task_time, '%Y-%m-%d %H:%i') BETWEEN STR_TO_DATE(#{startDate}, '%Y-%m-%d %H:%i')
+                  AND STR_TO_DATE(#{endDate}, '%Y-%m-%d %H:%i')
+        GROUP BY task_date
+        ORDER BY task_date
+    </select>
 </mapper>

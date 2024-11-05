@@ -1,8 +1,14 @@
 package shop.linyh.miniProgramDemo.service.impl;
+import java.util.Date;
 
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.http.HttpUtil;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -21,6 +27,7 @@ import java.util.Map;
  * @createDate 2024-11-04 22:50:29
  */
 @Service
+@Slf4j
 public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         implements UserService {
 
@@ -41,8 +48,36 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         Map<String, Object> requestParam = getWxLoginReqParam(code);
         String res = HttpUtil.get(url, requestParam);
         String loginId = IdUtil.simpleUUID();
+        JSONObject jsonObject = JSON.parseObject(res);
+        Object openId = jsonObject.get("openid");
+        User user = getUserInfo(openId);
+
+        log.info("loginId:{},res:{}", loginId,res);
         redisUtil.set(loginId, res, timeout);
         return loginId;
+    }
+
+    private User getUserInfo(Object openId) {
+        User user = lambdaQuery().eq(User::getOpenid, openId).one();
+//        如果user为空，那么就是还没登陆过的
+        if(user == null) {
+            user = getInitUser(openId);
+            this.save(user);
+        }
+        return user;
+    }
+
+    private User getInitUser(Object openId) {
+        User user = new User();
+        user.setIsBindOtherAccount(false);
+        user.setOpenid(openId.toString());
+        user.setSessionKey("");
+        user.setUsername("微信用户");
+        user.setAvatarUrl("");
+        user.setGender(0);
+        user.setPhone("");
+
+        return user;
     }
 
     private Map<String, Object> getWxLoginReqParam(String code) {
