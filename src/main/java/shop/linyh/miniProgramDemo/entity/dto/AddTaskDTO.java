@@ -10,5 +10,5 @@ public class AddTaskDTO {
 
     private Date taskTime;
 
-    private Boolean needNotify;
+    private Boolean needNotify = false;
 }

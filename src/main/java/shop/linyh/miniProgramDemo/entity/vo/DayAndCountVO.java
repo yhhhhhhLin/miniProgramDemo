@@ -7,7 +7,7 @@ import lombok.Data;
  */
 @Data
 public class DayAndCountVO {
-    private Integer day;
+    private String taskDay;
 
-    private Integer count;
+    private Integer taskCount;
 }

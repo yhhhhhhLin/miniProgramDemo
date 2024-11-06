@@ -8,6 +8,7 @@ import lombok.Data;
 
 /**
  * 
+ * @author linzz
  * @TableName user
  */
 @TableName(value ="user")
@@ -17,7 +18,7 @@ public class User implements Serializable {
      * id
      */
     @TableId(type = IdType.AUTO)
-    private Integer id;
+    private Long id;
 
     /**
      *  是否绑定第三方账号

@@ -5,7 +5,10 @@ import org.springframework.web.bind.annotation.*;
 import shop.linyh.miniProgramDemo.common.BaseResponse;
 import shop.linyh.miniProgramDemo.common.UserOpenIdContext;
 import shop.linyh.miniProgramDemo.entity.dto.AddTaskDTO;
+import shop.linyh.miniProgramDemo.entity.dto.QueryTaskDTO;
 import shop.linyh.miniProgramDemo.entity.vo.DayAndCountVO;
+import shop.linyh.miniProgramDemo.entity.vo.TaskClassificationVO;
+import shop.linyh.miniProgramDemo.entity.vo.TaskVO;
 import shop.linyh.miniProgramDemo.service.TasksService;
 import shop.linyh.miniProgramDemo.utils.ResultUtils;
 
@@ -20,8 +23,14 @@ public class TaskController {
 
     @PostMapping("/add")
     public BaseResponse<Boolean> addTask(@RequestBody AddTaskDTO addTaskDTO){
-        String openId = UserOpenIdContext.getOpenId();
-        return null;
+        Boolean addTaskResult = tasksService.addTask(addTaskDTO);
+        return ResultUtils.success(addTaskResult);
+    }
+
+    @PostMapping("/list")
+    public BaseResponse<TaskClassificationVO> listTask(@RequestBody QueryTaskDTO dto){
+        TaskClassificationVO tasks = tasksService.listTaskAndClassify(dto);
+        return ResultUtils.success(tasks);
     }
 
     /**

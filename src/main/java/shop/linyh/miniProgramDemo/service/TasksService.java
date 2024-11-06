@@ -2,7 +2,10 @@ package shop.linyh.miniProgramDemo.service;
 
 import shop.linyh.miniProgramDemo.entity.Tasks;
 import com.baomidou.mybatisplus.extension.service.IService;
+import shop.linyh.miniProgramDemo.entity.dto.AddTaskDTO;
+import shop.linyh.miniProgramDemo.entity.dto.QueryTaskDTO;
 import shop.linyh.miniProgramDemo.entity.vo.DayAndCountVO;
+import shop.linyh.miniProgramDemo.entity.vo.TaskClassificationVO;
 
 import java.util.List;
 
@@ -20,4 +23,13 @@ public interface TasksService extends IService<Tasks> {
      * @return
      */
     List<DayAndCountVO> calendars(Integer year, Integer month);
+
+    /**
+     * 添加任务
+     * @param addTaskDTO
+     * @return
+     */
+    Boolean addTask(AddTaskDTO addTaskDTO);
+
+    TaskClassificationVO listTaskAndClassify(QueryTaskDTO dto);
 }

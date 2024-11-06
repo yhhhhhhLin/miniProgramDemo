@@ -7,6 +7,7 @@ import shop.linyh.miniProgramDemo.entity.Tasks;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import shop.linyh.miniProgramDemo.entity.vo.DayAndCountVO;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +22,13 @@ public interface TasksMapper extends BaseMapper<Tasks> {
 
     List<DayAndCountVO> calendars(@Param("startDate") String startDate,
                                   @Param("endDate") String date1);
+
+    /**
+     * dateStr不一定一定有 格式：2024-11-6
+     * @param dateStr
+     * @return
+     */
+    List<Tasks> listTask(@Param("dateStr") String dateStr, @Param("userId") Long userId);
 }
 
 

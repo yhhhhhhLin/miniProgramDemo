@@ -9,7 +9,7 @@
             <result property="taskContent" column="task_content" jdbcType="VARCHAR"/>
             <result property="taskTime" column="task_time" jdbcType="TIMESTAMP"/>
             <result property="userId" column="user_id" jdbcType="INTEGER"/>
-            <result property="isFinish" column="is_finish" jdbcType="TINYINT"/>
+            <result property="taskStatus" column="is_finish" jdbcType="TINYINT"/>
             <result property="needNotify" column="need_notify" jdbcType="TINYINT"/>
             <result property="createdTime" column="created_time" jdbcType="TIMESTAMP"/>
             <result property="updatedTime" column="updated_time" jdbcType="TIMESTAMP"/>
@@ -19,15 +19,24 @@
     <sql id="Base_Column_List">
         id
         ,task_content,task_time,
-        user_id,is_finish,need_notify,
+        user_id,task_status,need_notify,
         created_time,updated_time,is_delete
     </sql>
     <select id="calendars" resultType="shop.linyh.miniProgramDemo.entity.vo.DayAndCountVO">
-        SELECT DATE_FORMAT(task_time, '%Y-%m-%d') AS task_date, COUNT(*) AS task_count
+        SELECT DATE_FORMAT(task_time, '%Y-%m-%d') AS task_day, COUNT(*) AS task_count
         FROM tasks
         WHERE STR_TO_DATE(task_time, '%Y-%m-%d %H:%i') BETWEEN STR_TO_DATE(#{startDate}, '%Y-%m-%d %H:%i')
                   AND STR_TO_DATE(#{endDate}, '%Y-%m-%d %H:%i')
-        GROUP BY task_date
-        ORDER BY task_date
+        GROUP BY task_day
+        ORDER BY task_day
+    </select>
+
+    <select id="listTask" resultType="shop.linyh.miniProgramDemo.entity.Tasks">
+        select *
+        from tasks
+        where user_id = #{userId}
+        <if test="dateStr != null and dateStr != ''">
+            AND date_format(task_time, '%Y-%m-%d') = #{dateStr}
+        </if>
     </select>
 </mapper>

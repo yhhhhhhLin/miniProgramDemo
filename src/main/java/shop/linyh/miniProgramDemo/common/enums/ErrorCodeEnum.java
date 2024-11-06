@@ -1,4 +1,4 @@
-package shop.linyh.miniProgramDemo.common;
+package shop.linyh.miniProgramDemo.common.enums;
 
 /**
  * 错误码

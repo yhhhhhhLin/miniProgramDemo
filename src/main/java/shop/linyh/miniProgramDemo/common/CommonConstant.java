@@ -4,5 +4,5 @@ public interface CommonConstant {
 
     String LOGIN_ID = "loginId";
 
-    String OPEN_ID = "openId";
+    String OPEN_ID = "openid";
 }

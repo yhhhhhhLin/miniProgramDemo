@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import shop.linyh.miniProgramDemo.common.enums.ErrorCodeEnum;
+import shop.linyh.miniProgramDemo.common.exception.BusinessException;
 import shop.linyh.miniProgramDemo.entity.User;
 import shop.linyh.miniProgramDemo.mapper.UserMapper;
 import shop.linyh.miniProgramDemo.service.UserService;
@@ -20,6 +22,8 @@ import shop.linyh.miniProgramDemo.utils.RedisUtil;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static shop.linyh.miniProgramDemo.common.CommonConstant.OPEN_ID;
 
 /**
  * @author linzz
@@ -49,12 +53,22 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         String res = HttpUtil.get(url, requestParam);
         String loginId = IdUtil.simpleUUID();
         JSONObject jsonObject = JSON.parseObject(res);
-        Object openId = jsonObject.get("openid");
+        Object openId = jsonObject.get(OPEN_ID);
         User user = getUserInfo(openId);
 
         log.info("loginId:{},res:{}", loginId,res);
         redisUtil.set(loginId, res, timeout);
         return loginId;
+    }
+
+    @Override
+    public User getUserByOpenId(String openId) {
+        User user = lambdaQuery().eq(User::getOpenid, openId)
+                .one();
+        if(user == null){
+            throw new BusinessException(ErrorCodeEnum.NOT_LOGIN_ERROR, "未登录或登陆过期");
+        }
+        return user;
     }
 
     private User getUserInfo(Object openId) {

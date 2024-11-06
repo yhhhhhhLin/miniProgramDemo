@@ -1,6 +1,7 @@
 package shop.linyh.miniProgramDemo.common;
 
 import lombok.Data;
+import shop.linyh.miniProgramDemo.common.enums.ErrorCodeEnum;
 
 import java.io.Serializable;
 import java.util.Objects;

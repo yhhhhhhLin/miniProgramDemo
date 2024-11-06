@@ -16,4 +16,6 @@ public interface UserService extends IService<User> {
      * @return
      */
     String getWxLoginId(String code);
+
+    User getUserByOpenId(String openId);
 }

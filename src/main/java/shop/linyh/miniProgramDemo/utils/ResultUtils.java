@@ -1,7 +1,7 @@
 package shop.linyh.miniProgramDemo.utils;
 
 import shop.linyh.miniProgramDemo.common.BaseResponse;
-import shop.linyh.miniProgramDemo.common.ErrorCodeEnum;
+import shop.linyh.miniProgramDemo.common.enums.ErrorCodeEnum;
 
 /**
  * 返回工具类
