@@ -20,6 +20,7 @@ CREATE TABLE tasks
     task_content VARCHAR(255) NOT NULL,                                                       -- 任务内容
     task_time    DATETIME     NOT NULL,                                                       -- 任务的具体时间，精确到小时、分钟、秒
     user_id      INT          NOT NULL,                                                       -- 任务所属用户ID
+    finish_time  TIMESTAMP,                                                                   -- 完成时间
     task_status  BOOLEAN      NOT NULL DEFAULT 0,                                             -- 任务状态 0未完成 1完成 2超时
     need_notify  BOOLEAN      NOT NULL DEFAULT 0,                                             -- 是否需要提醒
     created_time TIMESTAMP             DEFAULT CURRENT_TIMESTAMP,                             -- 创建时间，记录任务添加时间

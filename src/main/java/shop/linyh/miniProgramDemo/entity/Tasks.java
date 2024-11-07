@@ -33,6 +33,11 @@ public class Tasks implements Serializable {
     private Date taskTime;
 
     /**
+     * 完成时间
+     */
+    private Date finishTime;
+
+    /**
      *
      */
     private Long userId;

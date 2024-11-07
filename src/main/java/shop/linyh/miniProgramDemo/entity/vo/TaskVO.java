@@ -15,6 +15,8 @@ public class TaskVO {
 
     private Date taskTime;
 
+    private Date finishTime;
+
     private Integer taskStatus;
 
     private Boolean needNotify;
