@@ -6,6 +6,7 @@ import shop.linyh.miniProgramDemo.common.BaseResponse;
 import shop.linyh.miniProgramDemo.common.UserOpenIdContext;
 import shop.linyh.miniProgramDemo.entity.dto.AddTaskDTO;
 import shop.linyh.miniProgramDemo.entity.dto.QueryTaskDTO;
+import shop.linyh.miniProgramDemo.entity.dto.UpdateStatusDTO;
 import shop.linyh.miniProgramDemo.entity.vo.DayAndCountVO;
 import shop.linyh.miniProgramDemo.entity.vo.TaskClassificationVO;
 import shop.linyh.miniProgramDemo.entity.vo.TaskVO;
@@ -41,6 +42,12 @@ public class TaskController {
     public BaseResponse<List<DayAndCountVO>> calendars(Integer year, Integer month){
         List<DayAndCountVO> lists = tasksService.calendars(year, month);
         return ResultUtils.success(lists);
+    }
+
+    @PostMapping("/status")
+    public BaseResponse<Boolean> updateTaskStatus(@RequestBody UpdateStatusDTO dto){
+        Boolean result = tasksService.updateTaskStatus(dto);
+        return ResultUtils.success(result);
     }
 
 

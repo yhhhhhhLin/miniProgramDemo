@@ -11,6 +11,7 @@ import shop.linyh.miniProgramDemo.entity.Tasks;
 import shop.linyh.miniProgramDemo.entity.User;
 import shop.linyh.miniProgramDemo.entity.dto.AddTaskDTO;
 import shop.linyh.miniProgramDemo.entity.dto.QueryTaskDTO;
+import shop.linyh.miniProgramDemo.entity.dto.UpdateStatusDTO;
 import shop.linyh.miniProgramDemo.entity.vo.DayAndCountVO;
 import shop.linyh.miniProgramDemo.entity.vo.TaskClassificationVO;
 import shop.linyh.miniProgramDemo.entity.vo.TaskVO;
@@ -100,6 +101,21 @@ public class TasksServiceImpl extends ServiceImpl<TasksMapper, Tasks>
         taskClassificationVO.setCompletedTasks(convertToListTaskVO(completeTasks));
 
         return taskClassificationVO;
+    }
+
+    @Override
+    public Boolean updateTaskStatus(UpdateStatusDTO dto) {
+        String openId = UserOpenIdContext.getOpenId();
+        User user = userService.getUserByOpenId(openId);
+
+        Long taskId = dto.getId();
+        Integer status = dto.getStatus();
+
+        return lambdaUpdate().eq(Tasks::getUserId, user.getId())
+                .eq(Tasks::getId, taskId)
+                .set(Tasks::getTaskStatus, status)
+                .set(TaskStatusEnum.COMPLETE.getStatus() == dto.getStatus(), Tasks::getFinishTime, new Date())
+                .update();
     }
 
     private List<TaskVO> convertToListTaskVO(List<Tasks> tasks) {

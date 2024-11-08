@@ -4,6 +4,7 @@ import shop.linyh.miniProgramDemo.entity.Tasks;
 import com.baomidou.mybatisplus.extension.service.IService;
 import shop.linyh.miniProgramDemo.entity.dto.AddTaskDTO;
 import shop.linyh.miniProgramDemo.entity.dto.QueryTaskDTO;
+import shop.linyh.miniProgramDemo.entity.dto.UpdateStatusDTO;
 import shop.linyh.miniProgramDemo.entity.vo.DayAndCountVO;
 import shop.linyh.miniProgramDemo.entity.vo.TaskClassificationVO;
 
@@ -32,4 +33,6 @@ public interface TasksService extends IService<Tasks> {
     Boolean addTask(AddTaskDTO addTaskDTO);
 
     TaskClassificationVO listTaskAndClassify(QueryTaskDTO dto);
+
+    Boolean updateTaskStatus(UpdateStatusDTO dto);
 }
