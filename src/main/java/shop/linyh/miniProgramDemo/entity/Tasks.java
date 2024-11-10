@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
 
 import lombok.Data;
@@ -28,9 +29,14 @@ public class Tasks implements Serializable {
     private String taskContent;
 
     /**
-     *
+     * 任务时间（2024-11-10）
      */
-    private Date taskTime;
+    private Date taskTimeDate;
+
+    /**
+     * 任务时间（17:20)
+     */
+    private Date taskTimeTime;
 
     /**
      * 完成时间
@@ -69,4 +75,23 @@ public class Tasks implements Serializable {
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
+
+    /**
+     * 获取完整的时间
+     * @return
+     */
+    public Date getFullTaskTime(){
+        Calendar calendarDate = Calendar.getInstance();
+        calendarDate.setTime(taskTimeDate);
+
+        Calendar calendarTime = Calendar.getInstance();
+        calendarTime.setTime(taskTimeTime);
+
+        // 设置时间
+        calendarDate.set(Calendar.HOUR_OF_DAY, calendarTime.get(Calendar.HOUR_OF_DAY));
+        calendarDate.set(Calendar.MINUTE, calendarTime.get(Calendar.MINUTE));
+        calendarDate.set(Calendar.SECOND, calendarTime.get(Calendar.SECOND));
+
+        return calendarDate.getTime();
+    }
 }

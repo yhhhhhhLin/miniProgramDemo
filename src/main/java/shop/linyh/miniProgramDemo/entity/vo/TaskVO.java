@@ -13,6 +13,9 @@ public class TaskVO {
 
     private String taskContent;
 
+    /**
+     * fullTaskTime
+     */
     private Date taskTime;
 
     private Date finishTime;

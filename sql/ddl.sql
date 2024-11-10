@@ -18,7 +18,8 @@ CREATE TABLE tasks
 (
     id           INT AUTO_INCREMENT PRIMARY KEY,                                              -- 任务ID，自增主键
     task_content VARCHAR(255) NOT NULL,                                                       -- 任务内容
-    task_time    DATETIME     NOT NULL,                                                       -- 任务的具体时间，精确到小时、分钟、秒
+    task_time_date    DATE     NOT NULL,                                                       -- 任务的具体时间，精确到小时、分钟、秒
+    task_time_time    TIME     NOT NULL,                                                       -- 任务的具体时间，精确到小时、分钟、秒
     user_id      INT          NOT NULL,                                                       -- 任务所属用户ID
     finish_time  TIMESTAMP,                                                                   -- 完成时间
     task_status  BOOLEAN      NOT NULL DEFAULT 0,                                             -- 任务状态 0未完成 1完成 2超时

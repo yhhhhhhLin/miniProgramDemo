@@ -35,4 +35,11 @@ public interface TasksService extends IService<Tasks> {
     TaskClassificationVO listTaskAndClassify(QueryTaskDTO dto);
 
     Boolean updateTaskStatus(UpdateStatusDTO dto);
+
+    /**
+     * 根据时间获取当天未完成的任务
+     * @param date
+     * @return
+     */
+    List<Tasks> getUnFinishTask(String date);
 }

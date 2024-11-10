@@ -66,7 +66,8 @@ public class TasksServiceImpl extends ServiceImpl<TasksMapper, Tasks>
             tasks.setTaskStatus(TaskStatusEnum.INCOMPLETE.getStatus());
         }
         tasks.setTaskContent(taskContent);
-        tasks.setTaskTime(taskTime);
+        tasks.setTaskTimeDate(taskTime);
+        tasks.setTaskTimeTime(taskTime);
         tasks.setNeedNotify(addTaskDTO.getNeedNotify());
         tasks.setUserId(user.getId());
         boolean saveResult = save(tasks);
@@ -82,6 +83,7 @@ public class TasksServiceImpl extends ServiceImpl<TasksMapper, Tasks>
         date.set(dto.getYear(), dto.getMonth() - 1, dto.getDay());
 
         List<Tasks> tasks = tasksMapper.listTask(new SimpleDateFormat("yyyy-MM-dd").format(date.getTime()), user.getId());
+
         TaskClassificationVO taskClassificationVO = new TaskClassificationVO();
 
         List<Tasks> expiredTasks = tasks.stream()
@@ -118,10 +120,18 @@ public class TasksServiceImpl extends ServiceImpl<TasksMapper, Tasks>
                 .update();
     }
 
+    @Override
+    public List<Tasks> getUnFinishTask(String date) {
+        return null;
+//        return List.of();
+    }
+
     private List<TaskVO> convertToListTaskVO(List<Tasks> tasks) {
         return ConversionUtil.mapperCollection(tasks, t -> {
             TaskVO taskVO = new TaskVO();
             BeanUtils.copyProperties(t, taskVO);
+//            拼接出完整时间
+            taskVO.setTaskTime(t.getFullTaskTime());
             return taskVO;
         }, ArrayList::new);
     }
