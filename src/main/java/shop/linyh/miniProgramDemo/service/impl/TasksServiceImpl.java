@@ -122,8 +122,28 @@ public class TasksServiceImpl extends ServiceImpl<TasksMapper, Tasks>
 
     @Override
     public List<Tasks> getUnFinishTask(String date) {
-        return null;
-//        return List.of();
+        Calendar dateTime = Calendar.getInstance();
+        return this.lambdaQuery()
+                .eq(Tasks::getTaskTimeDate, dateTime.getTime())
+                .eq(Tasks::getTaskStatus, TaskStatusEnum.INCOMPLETE.getStatus())
+                .list();
+    }
+
+    /**
+     * TODO 考虑可能更新的时候调度任务的时候也获取了
+     *
+     * @param expireTasks
+     */
+    @Override
+    public Boolean batchFinishTask(List<Tasks> expireTasks) {
+        expireTasks.forEach(task -> {
+            task.setTaskStatus(TaskStatusEnum.INCOMPLETE.getStatus());
+            task.setFinishTime(new Date());
+        });
+
+        return this.updateBatchById(expireTasks);
+
+
     }
 
     private List<TaskVO> convertToListTaskVO(List<Tasks> tasks) {

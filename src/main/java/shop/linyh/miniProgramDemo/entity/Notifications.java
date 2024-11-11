@@ -27,9 +27,9 @@ public class Notifications implements Serializable {
     private Integer taskId;
 
     /**
-     * 
+     * 通知方式（0邮箱、1公众号、2短信等等）
      */
-    private Object notifyMethod;
+    private Integer notifyMethod;
 
     /**
      * 

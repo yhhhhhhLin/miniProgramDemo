@@ -6,51 +6,117 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import shop.linyh.miniProgramDemo.client.SendNotifyClient;
+import shop.linyh.miniProgramDemo.entity.Notifications;
 import shop.linyh.miniProgramDemo.entity.Tasks;
+import shop.linyh.miniProgramDemo.factory.SendNotifyClientFactory;
+import shop.linyh.miniProgramDemo.service.NotificationsService;
 import shop.linyh.miniProgramDemo.service.TasksService;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @author linzz
- * <p>
- * 检查当天事件是否到达时间
  */
 @Component
 @EnableScheduling
 @Slf4j
 public class TaskNotifyScheduling {
 
+    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static final DateTimeFormatter DATE_TIME_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+    private final ReentrantLock lock = new ReentrantLock();
+
     @Autowired
     private TasksService tasksService;
 
+    @Autowired
+    private NotificationsService notificationsService;
 
     /**
-     * 检查是否到达时间
+     * 定时任务：每分钟检查任务是否过期并发送通知
      */
     @Scheduled(cron = "0 * * * * ?")
     public void checkAndSendNotifications() {
-//        1. 获取当天所有没完成的任务
-        String nowDate = "2024-10-9";
-        List<Tasks> tasksList = tasksService.getUnFinishTask(nowDate);
-//        2. 获取当前的时间
+        if (lock.tryLock()) {
+            try {
+                LocalDateTime currentTime = LocalDateTime.now();
+                String todayDate = DATE_FORMAT.format(currentTime);
 
-//        3. 判断任务时间是否到期
+                List<Tasks> tasksList = tasksService.getUnFinishTask(todayDate);
+                tasksList.sort(Comparator.comparing(Tasks::getFullTaskTime));
 
-//        4. 按照消息类型获取对应client发送消息
-        log.info("执行一次查看...{}", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime()));
+                log.info("执行任务检查，当前时间：{}", DATE_TIME_FORMAT.format(currentTime));
+
+                List<Tasks> expireTasks = getExpireTasks(tasksList, currentTime);
+
+                if (!expireTasks.isEmpty()) {
+                    if (tasksService.batchFinishTask(expireTasks)) {
+                        log.info("批量更新完成，共更新 {} 个过期任务", expireTasks.size());
+                        judgingAndSendTasks(expireTasks);
+                    } else {
+                        log.warn("批量更新任务失败");
+                    }
+                } else {
+                    log.info("无过期任务需要处理");
+                }
+            } finally {
+                lock.unlock();
+            }
+        } else {
+            log.info("任务检查被跳过，上次检查尚未完成");
+        }
     }
 
+    /**
+     * 获取已过期的任务列表
+     */
+    private List<Tasks> getExpireTasks(List<Tasks> tasksList, LocalDateTime currentTime) {
+        List<Tasks> expireTasks = new ArrayList<>();
+        tasksList.forEach(task -> {
+            if (task.getFullTaskTime().toInstant().isBefore(currentTime.atZone(java.time.ZoneId.systemDefault()).toInstant())) {
+                expireTasks.add(task);
+                log.info("任务 {} 已过期，执行通知", task.getId());
+            } else {
+                log.info("任务 {} 尚未到期", task.getId());
+            }
+        });
+        return expireTasks;
+    }
 
     /**
-     * 发送通知
-     *
-     * @param task
+     * 筛选需要通知的任务并发送通知
+     */
+    private void judgingAndSendTasks(List<Tasks> expireTasks) {
+        expireTasks.stream()
+                .filter(Tasks::getNeedNotify)
+                .forEach(this::sendNotification);
+    }
+
+    /**
+     * 异步发送通知，根据通知方式选择相应的通知客户端
      */
     @Async("taskSendNotifyExecutor")
     public void sendNotification(Tasks task) {
-//        TODO 根根据任务通知类型发送对应的通知
+        try {
+            Notifications notifications = notificationsService.getByTaskId(task.getId());
+            SendNotifyClient client = SendNotifyClientFactory.getClient(notifications.getNotifyMethod());
+            // TODO: 发送消息的逻辑
+            boolean sendResult = false;
+            // boolean sendResult = client.sendMessage(TODO);
+            if (sendResult) {
+                log.info("任务 {} 的通知已发送", task.getId());
+            } else {
+                log.warn("任务 {} 的通知发送失败", task.getId());
+            }
+        } catch (Exception e) {
+            log.error("任务 {} 的通知发送失败，异常信息：{}", task.getId(), e.getMessage());
+        }
     }
 }
