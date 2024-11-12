@@ -37,9 +37,9 @@ public class Notifications implements Serializable {
     private Date notifyTime;
 
     /**
-     * 
+     * 0未通知 1通知成功 2通知失败
      */
-    private Object notifyStatus;
+    private Integer notifyStatus;
 
     /**
      * 

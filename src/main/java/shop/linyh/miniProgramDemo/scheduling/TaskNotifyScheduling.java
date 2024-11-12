@@ -107,14 +107,7 @@ public class TaskNotifyScheduling {
         try {
             Notifications notifications = notificationsService.getByTaskId(task.getId());
             SendNotifyClient client = SendNotifyClientFactory.getClient(notifications.getNotifyMethod());
-            // TODO: 发送消息的逻辑
-            boolean sendResult = false;
-            // boolean sendResult = client.sendMessage(TODO);
-            if (sendResult) {
-                log.info("任务 {} 的通知已发送", task.getId());
-            } else {
-                log.warn("任务 {} 的通知发送失败", task.getId());
-            }
+            boolean sendResult = client.sendMessage(task, notifications);
         } catch (Exception e) {
             log.error("任务 {} 的通知发送失败，异常信息：{}", task.getId(), e.getMessage());
         }

@@ -11,4 +11,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface NotificationsService extends IService<Notifications> {
 
     Notifications getByTaskId(Long taskId);
+
+    Boolean updateNotifyStatus(Integer id, int status);
 }

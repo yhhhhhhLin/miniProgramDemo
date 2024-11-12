@@ -1,6 +1,9 @@
 package shop.linyh.miniProgramDemo.client;
 
+import shop.linyh.miniProgramDemo.entity.Notifications;
+import shop.linyh.miniProgramDemo.entity.Tasks;
+
 public interface SendNotifyClient {
 
-    boolean sendMessage(String to, String subject, String message);
+    boolean sendMessage(Tasks task, Notifications notifications);
 }

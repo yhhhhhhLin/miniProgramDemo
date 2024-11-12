@@ -1,22 +1,26 @@
 package shop.linyh.miniProgramDemo.client;
 
 import org.springframework.stereotype.Component;
+import shop.linyh.miniProgramDemo.entity.Notifications;
+import shop.linyh.miniProgramDemo.entity.Tasks;
 
 /**
  * @author linzz
  */
 @Component
-public class SendOfficialAccountNotiryClient implements SendNotifyClient{
+public class SendOfficialAccountNotiryClient implements SendNotifyClient {
+
 
     /**
      * 发送公众号提醒
-     * @param to
-     * @param subject
-     * @param message
+     *
+     * @param task
+     * @param notifications
      * @return
      */
     @Override
-    public boolean sendMessage(String to, String subject, String message) {
+    public boolean sendMessage(Tasks task, Notifications notifications) {
         return false;
     }
+
 }

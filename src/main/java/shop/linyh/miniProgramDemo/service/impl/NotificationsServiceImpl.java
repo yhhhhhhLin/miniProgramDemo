@@ -20,6 +20,13 @@ public class NotificationsServiceImpl extends ServiceImpl<NotificationsMapper, N
         return lambdaQuery().eq(Notifications::getTaskId, taskId)
                 .one();
     }
+
+    @Override
+    public Boolean updateNotifyStatus(Integer id, int status) {
+        return lambdaUpdate().eq(Notifications::getId, id)
+                .set(Notifications::getNotifyStatus, status)
+                .update();
+    }
 }
 
 

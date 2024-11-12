@@ -36,9 +36,12 @@ CREATE TABLE notifications
     task_id        INT      NOT NULL,                                               -- 关联任务ID
     notify_method  int      NOT NULL,                                               -- 通知方式（0邮箱、1公众号、2短信等等）
     notify_time    DATETIME NOT NULL,                                               -- 通知时间
-    notify_status  ENUM('pending', 'sent', 'failed') NOT NULL,                      -- 通知状态（待发送、已发送、发送失败）
+    notify_status  int NOT NULL,                      -- 通知状态（0待发送、1已发送、2发送失败）
     failure_reason VARCHAR(255),                                                    -- 发送失败原因（如果有）
     created_time   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,                             -- 记录创建时间
     updated_time   TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- 更新时间
     is_delete      BOOLEAN   DEFAULT 0                                              -- 逻辑删除字段
 );
+
+alter table user
+    add email varchar(255) null comment '邮箱';

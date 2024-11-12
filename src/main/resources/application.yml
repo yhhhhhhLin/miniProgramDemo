@@ -11,7 +11,7 @@ spring:
     host: remote
     port: 26379
   mail:
-    host: abc.163.com
+    host: smtp.qq.com
     username: ${emailUsername}
     password: ${emailPassword}
     port: 465

@@ -11,4 +11,6 @@ public class AddTaskDTO {
     private Date taskTime;
 
     private Boolean needNotify = false;
+
+    private Integer notifyMethod;
 }

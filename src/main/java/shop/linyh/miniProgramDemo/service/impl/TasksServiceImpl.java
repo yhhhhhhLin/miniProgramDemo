@@ -52,6 +52,7 @@ public class TasksServiceImpl extends ServiceImpl<TasksMapper, Tasks>
 
     @Override
     public Boolean addTask(AddTaskDTO addTaskDTO) {
+//        TODO 如果需要通知，需要判断对应内容是否有绑定
 //        获取当前用户的小程序绑定openId
         String openId = UserOpenIdContext.getOpenId();
         User user = userService.getUserByOpenId(openId);
