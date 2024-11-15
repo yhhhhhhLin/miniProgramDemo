@@ -23,4 +23,6 @@ public class TaskVO {
     private Integer taskStatus;
 
     private Boolean needNotify;
+
+    private String tagName;
 }

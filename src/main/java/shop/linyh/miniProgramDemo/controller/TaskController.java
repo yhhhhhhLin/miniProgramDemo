@@ -3,13 +3,11 @@ package shop.linyh.miniProgramDemo.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import shop.linyh.miniProgramDemo.common.BaseResponse;
-import shop.linyh.miniProgramDemo.common.UserOpenIdContext;
 import shop.linyh.miniProgramDemo.entity.dto.AddTaskDTO;
 import shop.linyh.miniProgramDemo.entity.dto.QueryTaskDTO;
 import shop.linyh.miniProgramDemo.entity.dto.UpdateStatusDTO;
 import shop.linyh.miniProgramDemo.entity.vo.DayAndCountVO;
 import shop.linyh.miniProgramDemo.entity.vo.TaskClassificationVO;
-import shop.linyh.miniProgramDemo.entity.vo.TaskVO;
 import shop.linyh.miniProgramDemo.service.TasksService;
 import shop.linyh.miniProgramDemo.utils.ResultUtils;
 
@@ -49,6 +47,16 @@ public class TaskController {
         Boolean result = tasksService.updateTaskStatus(dto);
         return ResultUtils.success(result);
     }
+
+    @PostMapping("/listByTagId")
+    public BaseResponse<TaskClassificationVO> listByTagId(Integer tagId){
+        TaskClassificationVO tasks = tasksService.listByTagId(tagId);
+        return ResultUtils.success(tasks);
+
+
+    }
+
+
 
 
 }

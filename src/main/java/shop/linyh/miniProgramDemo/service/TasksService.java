@@ -47,4 +47,8 @@ public interface TasksService extends IService<Tasks> {
     List<Tasks> getUnFinishTask(String date);
 
     Boolean batchFinishTask(List<Tasks> expireTasks);
+
+    List<Tasks> getUnFinishTaskByTagId(Long tagId);
+
+    TaskClassificationVO listByTagId(Integer tagId);
 }

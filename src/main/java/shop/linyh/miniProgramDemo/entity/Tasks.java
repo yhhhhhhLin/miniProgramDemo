@@ -69,6 +69,11 @@ public class Tasks implements Serializable {
     private Date updatedTime;
 
     /**
+     * 任务标签 如果为0那么就是没标签
+     */
+    private Integer tagId;
+
+    /**
      *
      */
     private Integer isDelete;

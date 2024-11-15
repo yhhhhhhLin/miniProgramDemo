@@ -13,4 +13,9 @@ public class AddTaskDTO {
     private Boolean needNotify = false;
 
     private Integer notifyMethod;
+
+    /**
+     * 任务标签id
+     */
+    private Integer tagId;
 }

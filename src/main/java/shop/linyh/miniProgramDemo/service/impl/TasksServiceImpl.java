@@ -1,12 +1,16 @@
 package shop.linyh.miniProgramDemo.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import shop.linyh.miniProgramDemo.common.UserOpenIdContext;
+import shop.linyh.miniProgramDemo.common.enums.ErrorCodeEnum;
+import shop.linyh.miniProgramDemo.common.enums.NotificationMethodEnum;
 import shop.linyh.miniProgramDemo.common.enums.TaskStatusEnum;
+import shop.linyh.miniProgramDemo.common.exception.BusinessException;
 import shop.linyh.miniProgramDemo.entity.Tasks;
 import shop.linyh.miniProgramDemo.entity.User;
 import shop.linyh.miniProgramDemo.entity.dto.AddTaskDTO;
@@ -52,10 +56,14 @@ public class TasksServiceImpl extends ServiceImpl<TasksMapper, Tasks>
 
     @Override
     public Boolean addTask(AddTaskDTO addTaskDTO) {
-//        TODO 如果需要通知，需要判断对应内容是否有绑定
 //        获取当前用户的小程序绑定openId
         String openId = UserOpenIdContext.getOpenId();
         User user = userService.getUserByOpenId(openId);
+
+        Boolean needNotify = addTaskDTO.getNeedNotify();
+        if(needNotify){
+            verifyNotifyParam(addTaskDTO);
+        }
 
         Tasks tasks = new Tasks();
         Date taskTime = addTaskDTO.getTaskTime();
@@ -70,10 +78,38 @@ public class TasksServiceImpl extends ServiceImpl<TasksMapper, Tasks>
         tasks.setTaskTimeDate(taskTime);
         tasks.setTaskTimeTime(taskTime);
         tasks.setNeedNotify(addTaskDTO.getNeedNotify());
+        tasks.setTagId(addTaskDTO.getTagId());
         tasks.setUserId(user.getId());
         boolean saveResult = save(tasks);
         log.info("添加新的任务成功:{}", tasks);
         return saveResult;
+    }
+
+    private void verifyNotifyParam(AddTaskDTO addTaskDTO) {
+        Integer notifyMethod = addTaskDTO.getNotifyMethod();
+        NotificationMethodEnum method = NotificationMethodEnum.fromCode(notifyMethod);
+        switch (method) {
+            case WECHAT:
+                break;
+            case EMAIL:
+                verifyEmailNotifyParam();
+                break;
+            case SMS:
+            default:
+                throw new BusinessException(ErrorCodeEnum.PARAMS_ERROR, "错误的通知方式");
+        }
+
+
+    }
+
+    private void verifyEmailNotifyParam() {
+        String userOpenId = UserOpenIdContext.getOpenId();
+        User user = userService.getUserByOpenId(userOpenId);
+        String email = user.getEmail();
+        if(StrUtil.isBlank(email)){
+            throw new BusinessException(ErrorCodeEnum.PARAMS_ERROR, "配置邮箱提醒必须先绑定邮箱!");
+        }
+
     }
 
     @Override
@@ -85,6 +121,10 @@ public class TasksServiceImpl extends ServiceImpl<TasksMapper, Tasks>
 
         List<Tasks> tasks = tasksMapper.listTask(new SimpleDateFormat("yyyy-MM-dd").format(date.getTime()), user.getId());
 
+        return getTaskClassificationVO(tasks);
+    }
+
+    private TaskClassificationVO getTaskClassificationVO(List<Tasks> tasks) {
         TaskClassificationVO taskClassificationVO = new TaskClassificationVO();
 
         List<Tasks> expiredTasks = tasks.stream()
@@ -102,7 +142,6 @@ public class TasksServiceImpl extends ServiceImpl<TasksMapper, Tasks>
         taskClassificationVO.setExpiredTasks(convertToListTaskVO(expiredTasks));
         taskClassificationVO.setIncompleteTasks(convertToListTaskVO(inCompleteTasks));
         taskClassificationVO.setCompletedTasks(convertToListTaskVO(completeTasks));
-
         return taskClassificationVO;
     }
 
@@ -131,7 +170,6 @@ public class TasksServiceImpl extends ServiceImpl<TasksMapper, Tasks>
     }
 
     /**
-     * TODO 考虑可能更新的时候调度任务的时候也获取了
      *
      * @param expireTasks
      */
@@ -145,6 +183,24 @@ public class TasksServiceImpl extends ServiceImpl<TasksMapper, Tasks>
         return this.updateBatchById(expireTasks);
 
 
+    }
+
+    @Override
+    public List<Tasks> getUnFinishTaskByTagId(Long tagId) {
+        return lambdaQuery().ne(Tasks::getTaskStatus, TaskStatusEnum.COMPLETE.getStatus())
+                .eq(Tasks::getTagId, tagId)
+                .list();
+    }
+
+    @Override
+    public TaskClassificationVO listByTagId(Integer tagId) {
+        if(tagId == null || tagId <= 0){
+            throw new BusinessException(ErrorCodeEnum.PARAMS_ERROR, "标签数据错误");
+        }
+        List<Tasks> tasks = lambdaQuery()
+                .eq(Tasks::getTagId, tagId)
+                .list();
+        return getTaskClassificationVO(tasks);
     }
 
     private List<TaskVO> convertToListTaskVO(List<Tasks> tasks) {
