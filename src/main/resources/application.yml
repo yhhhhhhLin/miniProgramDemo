@@ -35,7 +35,7 @@ spring:
             class: javax.net.ssl.SSLSocketFactory
   ai:
     openai:
-      base-url: https://api.gpt.ge
+      base-url: https://api.v3.cm
       api-key: ${V3_API_KEY}
       chat:
         options:
