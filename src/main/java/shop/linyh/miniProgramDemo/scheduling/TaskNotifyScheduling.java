@@ -42,7 +42,7 @@ public class TaskNotifyScheduling {
     /**
      * 定时任务：每分钟检查任务是否过期并发送通知
      */
-    @Scheduled(cron = "0 * * * * ?")
+//    @Scheduled(cron = "0 * * * * ?")
     public void checkAndSendNotifications() {
         if (lock.tryLock()) {
             try {

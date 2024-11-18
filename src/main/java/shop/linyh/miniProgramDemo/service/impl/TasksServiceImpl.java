@@ -61,7 +61,7 @@ public class TasksServiceImpl extends ServiceImpl<TasksMapper, Tasks>
         User user = userService.getUserByOpenId(openId);
 
         Boolean needNotify = addTaskDTO.getNeedNotify();
-        if(needNotify){
+        if (needNotify) {
             verifyNotifyParam(addTaskDTO);
         }
 
@@ -106,7 +106,7 @@ public class TasksServiceImpl extends ServiceImpl<TasksMapper, Tasks>
         String userOpenId = UserOpenIdContext.getOpenId();
         User user = userService.getUserByOpenId(userOpenId);
         String email = user.getEmail();
-        if(StrUtil.isBlank(email)){
+        if (StrUtil.isBlank(email)) {
             throw new BusinessException(ErrorCodeEnum.PARAMS_ERROR, "配置邮箱提醒必须先绑定邮箱!");
         }
 
@@ -115,11 +115,13 @@ public class TasksServiceImpl extends ServiceImpl<TasksMapper, Tasks>
     @Override
     public TaskClassificationVO listTaskAndClassify(QueryTaskDTO dto) {
         String openId = UserOpenIdContext.getOpenId();
+        Integer tagId = dto.getTagId();
         User user = userService.getUserByOpenId(openId);
+
         Calendar date = Calendar.getInstance();
         date.set(dto.getYear(), dto.getMonth() - 1, dto.getDay());
 
-        List<Tasks> tasks = tasksMapper.listTask(new SimpleDateFormat("yyyy-MM-dd").format(date.getTime()), user.getId());
+        List<Tasks> tasks = tasksMapper.listTask(new SimpleDateFormat("yyyy-MM-dd").format(date.getTime()), user.getId(), tagId);
 
         return getTaskClassificationVO(tasks);
     }
@@ -170,7 +172,6 @@ public class TasksServiceImpl extends ServiceImpl<TasksMapper, Tasks>
     }
 
     /**
-     *
      * @param expireTasks
      */
     @Override
@@ -194,7 +195,7 @@ public class TasksServiceImpl extends ServiceImpl<TasksMapper, Tasks>
 
     @Override
     public TaskClassificationVO listByTagId(Integer tagId) {
-        if(tagId == null || tagId <= 0){
+        if (tagId == null || tagId <= 0) {
             throw new BusinessException(ErrorCodeEnum.PARAMS_ERROR, "标签数据错误");
         }
         List<Tasks> tasks = lambdaQuery()

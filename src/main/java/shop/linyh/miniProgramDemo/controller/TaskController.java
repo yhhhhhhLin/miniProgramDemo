@@ -26,12 +26,6 @@ public class TaskController {
         return ResultUtils.success(addTaskResult);
     }
 
-    @PostMapping("/list")
-    public BaseResponse<TaskClassificationVO> listTask(@RequestBody QueryTaskDTO dto){
-        TaskClassificationVO tasks = tasksService.listTaskAndClassify(dto);
-        return ResultUtils.success(tasks);
-    }
-
     /**
      * 根据月份获取当月的所有日对应的数量
      * @return
@@ -48,15 +42,10 @@ public class TaskController {
         return ResultUtils.success(result);
     }
 
-    @PostMapping("/listByTagId")
-    public BaseResponse<TaskClassificationVO> listByTagId(Integer tagId){
-        TaskClassificationVO tasks = tasksService.listByTagId(tagId);
+    @PostMapping("/list")
+    public BaseResponse<TaskClassificationVO> listTask(@RequestBody QueryTaskDTO dto){
+        TaskClassificationVO tasks = tasksService.listTaskAndClassify(dto);
         return ResultUtils.success(tasks);
-
-
     }
-
-
-
 
 }

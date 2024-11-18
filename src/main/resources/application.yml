@@ -7,9 +7,13 @@ spring:
     url: jdbc:mysql://localhost:3306/miniProgramDemo
     username: root
     password: abc8909389
-  redis:
-    host: remote
-    port: 26379
+  data:
+    redis:
+      host: remote
+      port: 26379
+#  redis:
+#    host: remote
+#    port: 26379
   mail:
     host: smtp.qq.com
     username: ${emailUsername}
@@ -29,6 +33,14 @@ spring:
           socketFactory:
             port: 465
             class: javax.net.ssl.SSLSocketFactory
+  ai:
+    openai:
+      base-url: https://api.gpt.ge
+      api-key: ${V3_API_KEY}
+      chat:
+        options:
+          model: gpt-3.5-turbo
+
 server:
   port: 7001
   servlet:

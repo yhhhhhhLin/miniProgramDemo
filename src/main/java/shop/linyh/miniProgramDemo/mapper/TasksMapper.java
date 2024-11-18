@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import shop.linyh.miniProgramDemo.entity.Tasks;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import shop.linyh.miniProgramDemo.entity.vo.DayAndCountVO;
+import shop.linyh.miniProgramDemo.entity.vo.TaskVO;
 
 import java.util.Date;
 import java.util.List;
@@ -28,7 +29,7 @@ public interface TasksMapper extends BaseMapper<Tasks> {
      * @param dateStr
      * @return
      */
-    List<Tasks> listTask(@Param("dateStr") String dateStr, @Param("userId") Long userId);
+    List<Tasks> listTask(@Param("dateStr") String dateStr, @Param("userId") Long userId, @Param("tagId") Integer tagId);
 }
 
 

@@ -1,5 +1,6 @@
 package shop.linyh.miniProgramDemo.client;
 
+import jakarta.mail.MessagingException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,7 +14,6 @@ import shop.linyh.miniProgramDemo.entity.User;
 import shop.linyh.miniProgramDemo.service.NotificationsService;
 import shop.linyh.miniProgramDemo.service.UserService;
 
-import javax.mail.MessagingException;
 import java.util.Date;
 
 /**

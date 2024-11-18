@@ -9,7 +9,7 @@ import java.util.Date;
  */
 @Data
 public class TaskVO {
-    private Long id;
+    private Long taskId;
 
     private String taskContent;
 
@@ -23,6 +23,8 @@ public class TaskVO {
     private Integer taskStatus;
 
     private Boolean needNotify;
+
+    private Long tagId;
 
     private String tagName;
 }

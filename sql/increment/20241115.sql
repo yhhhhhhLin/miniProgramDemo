@@ -1,5 +1,5 @@
 alter table tasks
-    add tag tinyint null comment '任务标签';
+    add tag_id tinyint null comment '任务标签';
 
 CREATE TABLE task_tag
 (
@@ -10,5 +10,3 @@ CREATE TABLE task_tag
     updated_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- 更新时间
     is_delete    BOOLEAN   DEFAULT 0                                              -- 逻辑删除字段
 );
-
-drop table task_tag;

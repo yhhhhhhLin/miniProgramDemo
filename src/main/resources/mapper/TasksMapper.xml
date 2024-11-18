@@ -38,5 +38,35 @@
         <if test="dateStr != null and dateStr != ''">
             AND date_format(task_time, '%Y-%m-%d') = #{dateStr}
         </if>
+        <if test="tagId > 0">
+            and tag_id = #{tagId}
+        </if>
     </select>
+
+
+
+<!--    更新后-->
+<!--    <select id="listTask" resultType="shop.linyh.miniProgramDemo.entity.vo.TaskVO">-->
+<!--        SELECT-->
+<!--        t.id as task_id,-->
+<!--        t.taskContent,-->
+<!--        t.taskTimeDate,-->
+<!--        t.taskTimeTime,-->
+<!--        t.finishTime,-->
+<!--        t.taskStatus,-->
+<!--        t.needNotify,-->
+<!--        tt.id AS tag_id,-->
+<!--        tt.tag_name-->
+<!--        FROM-->
+<!--        tasks t-->
+<!--        JOIN-->
+<!--        task_tag tt ON t.tag_id = tt.id-->
+<!--        WHERE-->
+<!--        t.user_id = #{userId}-->
+<!--        AND t.is_delete = 0-->
+<!--        AND tt.is_delete = 0-->
+<!--        <if test="dateStr != null and dateStr != ''">-->
+<!--            AND DATE_FORMAT(t.task_time_date, '%Y-%m-%d') = #{dateStr}-->
+<!--        </if>-->
+<!--    </select>-->
 </mapper>

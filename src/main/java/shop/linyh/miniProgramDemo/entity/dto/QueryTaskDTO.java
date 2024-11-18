@@ -15,4 +15,9 @@ public class QueryTaskDTO {
     private Integer month;
 
     private Integer day;
+
+    /**
+     * 标签id，如果是<=0 那么就是查询所有标签的
+     */
+    private Integer tagId = 0;
 }
